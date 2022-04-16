@@ -9,5 +9,4 @@ class WebSpringApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
