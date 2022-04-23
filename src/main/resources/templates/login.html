@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-default bg-light">
+    <div class="container">
+        <a href="#" class="navbar-brand" style="color: black">TestWebsite</a>
+        <div class ="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Главная</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Новости</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Темы</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Профиль</a></li>
+                <li class="nav-item active"><a href="#" class="nav-link" style="color: black">Вход</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="parent" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; overflow: auto">
+    <div class="col-md-4" style="position: absolute;top: 45%;left: 45%; margin: -125px 0 0 -125px; background-color: rgba(49,43,43,0.04); border: solid rgba(0,0,0,0.1)">
+        <div class="container-fluid">
+            <ul class="nav nav-tabs">
+                <li class="active" style="background-color: rgba(245,186,186,0.3)">
+                    <a data-toggle="tab" href="#reg">Регистрация</a>
+                </li>
+                <li class="col-md-6" style="background-color: rgba(245,186,186,0.3)">
+                    <a data-toggle="tab" href="#log">Вход</a>
+                </li>
+                </ul>
+            <div class="tab-content">
+                <div id="reg" class="tab-pane fade in active">
+                    <form action="#" th:action="@{/login}" th:object="${user}" method="post">
+                        <p style="font-size: 20px; text-decoration: underline">Регистрация</p>
+                        <p>Username: <input type="text" th:field="*{username}" /></p>
+                        <p>Password: <input type="text" th:field="*{password}" /></p>
+                        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+                    </form>
+                </div>
+                <div id="log" class="tab-pane fade">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

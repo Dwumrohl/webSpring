@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.web.webSpring.MongoConfig;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class WebController {
@@ -26,15 +27,27 @@ public class WebController {
 
     @GetMapping("/greeting")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-        List<user> users = ops.getAllUsers(mongoOperation);
-        model.addAttribute("name", users.get(0).getUsername());
-        model.addAttribute("user", new user());
         return "greeting";
     }
-    @PostMapping("/greeting")
+    @PostMapping("/login")
     public String greetingForm(@ModelAttribute user usr, Model model) {
+        List<user> users = ops.getAllUsers(mongoOperation);
+        String temp = "";
+        for (user x:users) {
+            temp = x.getUsername();
+        }
+        if(Objects.equals(temp, usr.getUsername())) {
+            model.addAttribute("regFlag", false);
+        }
+        else
         ops.addUser(mongoOperation,usr);
-        return "greeting";
+        return "login";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model){
+        model.addAttribute("user", new user());
+        return "login";
     }
 
 
