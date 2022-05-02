@@ -1,10 +1,13 @@
 package com.web.webSpring.dbEntities;
 
+import org.bson.BsonTimestamp;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Set;
 
 @Document(collection = "announcements")
 public class announcement {
@@ -18,7 +21,7 @@ public class announcement {
     private String type;
 
     @Field("date")
-    private Timestamp date;
+    private BsonTimestamp date;
 
     @Field("description")
     private String description;
@@ -29,16 +32,28 @@ public class announcement {
     @Field("annTypeId")
     private String annTypeId;
 
+    @Field("image")
+    private String image;
+
     public announcement() {
     }
 
-    public announcement(String header, String type, Timestamp date, String description, String body, String annTypeId) {
+    public announcement(String header, String type, BsonTimestamp date, String description, String body, String annTypeId, String image) {
         this.header = header;
         this.type = type;
         this.date = date;
         this.description = description;
         this.body = body;
         this.annTypeId = annTypeId;
+        this.image=image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getId() {
@@ -65,11 +80,15 @@ public class announcement {
         this.type = type;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public String getDate() {
+      long value=date.getValue();
+      long unix = value >> 32;
+      Instant time = Instant.ofEpochSecond(unix);
+      time.atZone(ZoneId.of("Etc/GMT+4"));
+      return time.toString();
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(BsonTimestamp date) {
         this.date = date;
     }
 

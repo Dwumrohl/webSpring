@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Main Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/fontawesome.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/fontawesome.js" integrity="sha384-dPBGbj4Uoy1OOpM4+aRGfAOc0W37JkROT+3uynUgTHZCHZNMHfGXsmmvYTffZjYO" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-default bg-light">
+    <div class="container">
+        <a href="#" class="navbar-brand" style="color: black">TestWebsite</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключатель навигации">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class ="collapse navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="/greeting" class="nav-link active" aria-current="page" style="color: black">Главная</a></li>
+                <li class="nav-item"><a href="/announcements" class="nav-link" style="color: black">Новости</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Темы</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" style="color: black">Профиль</a></li>
+                <li th:if="${logged!=true}" class="nav-item"><a class="nav-link" href="/login"  style="color: black">Вход</a></li>
+                <li th:if="${logged==true}" class="nav-item"><a class="nav-link" href="/logout"  style="color: black"><i class="far fa-user"></i> Выход</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<ul style="list-style: none; margin-top: 50px;background-color: rgba(0,255,136,0.08);border-bottom: 2px outset rgba(17,66,47,0.1);border-top: 2px outset rgba(17,66,47,0.1);"th:each="ann : ${anns}">
+    <li>
+        <div class="container-fluid" style="padding-top: 2%">
+            <div class="row">
+                <div class="col-md-3">
+                    <img id="img1" style="object-fit: cover; height: 100%; width: 100%; max-height: 218px; float: left;" th:src="${ann.getImage()}" alt="Image not available">
+                </div>
+                <div class="col-md-5">
+        <a th:href="@{'/announcementPage?id='+${ann.getId()}}"><span style="font-size: 20px; text-decoration: underline;color: black; font-weight: bold;" th:text="${ann.getHeader()}"></span></a>
+        <p>Type: <span th:text="${ann.getType()}"></span></p>
+        <hr style="margin-left: fill"/>
+        <p style="font-size: 16px;" th:utext="${ann.getDescription()}"></p>
+                </div>
+        </div>
+        </div>
+        <div class="container-fluid"><p style="padding-top: 30px;"><span class="far fa-clock"></span> Datetime: <span style="padding-top: 100px; font-size: 16px;" th:text="${ann.getDate()}"></span></p></div>
+    </li>
+</ul>
+
+</body>
+</html>

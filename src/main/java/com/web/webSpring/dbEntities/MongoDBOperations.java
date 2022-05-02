@@ -1,5 +1,6 @@
 package com.web.webSpring.dbEntities;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,6 +15,13 @@ public class MongoDBOperations {
 
     public List<announcement> getAllAnnouncements(MongoOperations mongoOperations){
         return mongoOperations.findAll(announcement.class);
+    }
+
+    public List<announcement> getAllAnnLimit(MongoOperations mongoOperations){
+        Query searchAnn = new Query();
+        searchAnn.limit(5);
+        searchAnn.with(Sort.by(Sort.Direction.DESC, "date"));
+        return mongoOperations.find(searchAnn,announcement.class,"announcements");
     }
 
     public List<annType> getAllAnnTypes(MongoOperations mongoOperations){
