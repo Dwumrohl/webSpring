@@ -9,23 +9,16 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.web.webSpring.MongoConfig;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @Controller
 public class WebController {
@@ -38,12 +31,12 @@ public class WebController {
     MongoDBOperations ops = new MongoDBOperations();
 
     @GetMapping("/greeting")
-    public String greeting(Model model, HttpSession session) {
+    public String greeting() {
         return "greeting";
     }
 
     @GetMapping("/announcements")
-    public String ann(Model model, HttpSession session) {
+    public String ann(Model model) {
         List<announcement> realAnns = ops.getAllAnnLimit(mongoOperation);
         model.addAttribute("anns",realAnns);
         return "announcements";
@@ -108,7 +101,7 @@ public class WebController {
     }
 
     @GetMapping("/logout")
-    public ModelAndView logout(Model model, HttpSession session){
+    public ModelAndView logout(HttpSession session){
         session.setAttribute("username",null);
         session.setAttribute("logged",false);
         session.setAttribute("admin",false);
@@ -138,7 +131,7 @@ public class WebController {
     }
 
     @GetMapping("/leaveComment")
-    public ModelAndView leaveComment(@ModelAttribute comment comment, Model model, HttpSession session){
+    public ModelAndView leaveComment(@ModelAttribute comment comment, HttpSession session){
         String id = session.getAttribute("annId").toString();
         comment.setAnnId(id);
         comment.setDate(new BsonTimestamp((int) (Instant.now()).getEpochSecond(), 0));
@@ -148,13 +141,13 @@ public class WebController {
     }
 
     @GetMapping("/deleteComment")
-    public ModelAndView deleteComment(@RequestParam String id, Model model, HttpSession session){
+    public ModelAndView deleteComment(@RequestParam String id, HttpSession session){
         ops.removeComment(mongoOperation,"_id",id);
         return new ModelAndView("redirect:/announcementPage?id="+session.getAttribute("annId").toString());
     }
 
     @GetMapping("/deleteAnn")
-    public ModelAndView deleteAnn(@RequestParam String id, Model model, HttpSession session){
+    public ModelAndView deleteAnn(@RequestParam String id){
         ops.removeAnn(mongoOperation,"_id",id);
         return new ModelAndView("redirect:/announcements");
     }
@@ -167,7 +160,7 @@ public class WebController {
     }
 
     @GetMapping("/annByType")
-    public String getAnnByType(@RequestParam String id, Model model, HttpSession session){
+    public String getAnnByType(@RequestParam String id, Model model){
         List<announcement> anns = ops.searchAnnS(mongoOperation,"annTypeId",id);
         model.addAttribute("anns",anns);
         return "announcements";
@@ -231,7 +224,7 @@ public class WebController {
 
    @PostMapping("alterAnn")
    public ModelAndView alterAnn(@ModelAttribute announcement ann,
-                              @RequestParam("file") MultipartFile file,@RequestParam("_id") String id, @RequestParam("image") String image, Model model, HttpSession session){
+                              @RequestParam("file") MultipartFile file,@RequestParam("_id") String id, @RequestParam("image") String image){
        ann.setDate(new BsonTimestamp((int) (Instant.now()).getEpochSecond(), 0));
        annType annType = ops.searchAnnType(mongoOperation,"_id",ann.getAnnTypeId());
        ann.setType(annType.getType());
@@ -268,7 +261,7 @@ public class WebController {
    }
 
    @GetMapping("banUser")
-    public ModelAndView banUser(@RequestParam String id, @RequestParam boolean banned, Model model, HttpSession session){
+    public ModelAndView banUser(@RequestParam String id, @RequestParam boolean banned){
         ops.banUser(mongoOperation,"_id",id,"blocked",!banned);
         return new ModelAndView("redirect:/profile?id="+id);
    }

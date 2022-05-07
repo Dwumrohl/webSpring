@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import javax.servlet.MultipartConfigElement;
 
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
