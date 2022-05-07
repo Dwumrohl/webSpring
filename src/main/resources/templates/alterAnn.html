@@ -33,6 +33,7 @@
         </form>
     </div>
 </nav>
+<div th:if="${#session.getAttribute('admin')==true}">
 <div class="container" style="margin-top: 100px;">
     <div class="row">
         <div class="col-md-2"></div>
@@ -74,6 +75,10 @@
 </div>
 <div class="container-fluid">
     <div class="row" style="height: 100px"></div>
+</div>
+</div>
+<div th:if="${#session.getAttribute('admin')==false}">
+    <label style="font-size: 24px">Доступ запрещен</label>
 </div>
 </body>
 </html>
