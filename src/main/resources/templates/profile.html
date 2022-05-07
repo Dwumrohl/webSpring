@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Main Page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -10,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/fontawesome.js" integrity="sha384-dPBGbj4Uoy1OOpM4+aRGfAOc0W37JkROT+3uynUgTHZCHZNMHfGXsmmvYTffZjYO" crossorigin="anonymous"></script>
-
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-default bg-light">
@@ -35,45 +35,24 @@
         </form>
     </div>
 </nav>
-<div class="container" style="background-color: rgba(0,255,136,0.1); border: 2px outset rgba(0,0,0,0.1); margin-top: 1%;">
+<div class="container">
+    <hr>
     <div class="row">
-        <div class="col-md-12">
-            <i class="fas fa-newspaper" style="padding-left: 5%"></i><label th:text="${ann.getHeader()}" style="font-size: 18pt; text-decoration: underline; font-weight: bold; padding-top: 2%; padding-left: 5px"></label>
-            <label th:text="${ann.getDate()}" style="text-decoration: underline; padding-top: 2%; float: right; padding-right: 5%;"></label>
-            <hr/>
-            <label th:utext="${ann.getBody()}" style="padding: 5%"></label>
+        <div class="col-md-2" style="margin-top: 15px;">
+            <img src="/images/profile.png" style="max-width: 200px; max-height: 200px; object-fit: cover"/>
+            <p style="margin-top: 5px;">Username: <label th:text="${user.getUsername()}"></label></p>
+            <p th:if="${user.isAdmin()==true}"><label style="color: greenyellow">Администратор</label></p>
+            <p th:if="${user.isAdmin()==false}"><label>Пользователь</label><label th:if="${user.isBlocked()==true}" style="color: #da2f2f"> заблокирован</label></p>
         </div>
-    </div>
-</div>
-<div class="container" style="background-color: rgba(81,206,234,0.1); border: 2px outset rgba(0,0,0,0.1); margin-top: 1%;">
-    <div class="row">
-        <div class="col-md-12">
-            <label style="text-decoration: underline; font-weight: bold;font-size: 18pt; padding-top: 2%; padding-left: 5%"><i class="fas fa-comment"></i> Комментарии: <label th:text="${commSize}"></label></label>
-            <hr/>
-            <ul style="list-style: none; padding: unset;margin: unset; border-bottom: 1px solid black" th:each="comm : ${comments}">
-                <li>
-                    <i class="fas fa-user" style=" padding-left: 5%"></i><a style="color: black" th:href="@{'/profile?id='+${comm.getUserId()}}"><label th:text="${comm.getUserName()}" style="text-decoration: underline; font-weight: bold; padding-top: 2%;padding-left: 5px;"></label><i class="fas fa-external-link-alt" style="margin-left: 20px;"></i></a>
-                    <label th:if="${comm.isAdmin() == true}" style="text-decoration: underline; font-weight: bold;color: yellowgreen; padding-top: 2%; padding-left: 5%">Администратор</label>
-                    <label th:text="${comm.getDate()}" style="text-decoration: underline; padding-top: 2%; float: right; padding-right: 5%;"></label>
-                    <hr style="color: rgba(0,0,0,0.3)"/>
-                    <label th:utext="${comm.getBody()}" style="padding: 5%"></label>
-                    <p style="padding-left: 5%"><button class="btn btn-primary" style="background-color: #9f4f4f" th:if="${#session.getAttribute('username') == comm.getUserName() || #session.getAttribute('admin')==true}"><a style="color: white;" th:href="@{'/deleteComment?id='+${comm.getId()}}"><i class="fas fa-trash"></i> Удалить</a></button></p>
-                </li>
-            </ul>
+        <div class="col-md-1">
         </div>
-    </div>
-</div>
-<div th:if="${#session.getAttribute('logged')==true}" class="container"  style="background-color: rgba(63,210,243,0.1); border: 2px outset rgba(0,0,0,0.1); margin-top: 1%;">
-    <div class="row">
-        <div class="col-md-12">
-            <label style="text-decoration: underline; font-weight: bold;font-size: 18pt; padding-top: 2%; padding-left: 5%"><i class="fas fa-comment"></i> Оставить комментарий: </label>
-            <form action=# th:action="@{/leaveComment}" th:object="${comment}">
-                <div class="mb-3">
-                    <textarea wrap="hard" class="form-control" th:field="*{body}" style="height: 166px; resize: none" placeholder="Текст комментария..." required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Отправить</button>
-            </form>
+        <div class="col-md-9" style="margin-top: 15px;border-left: 1px solid black">
+            <p>Количество комментариев: <label th:text="${count}"></label></p>
+            <p>Дата регистрации: <label th:text="${user.getRegister_date()}"></label></p>
+            <p>Дата входа: <label th:text="${user.getLogin_date()}"></label></p>
+            <p th:if="${#session.getAttribute('admin')==true && user.getId()!=#session.getAttribute('userId')}"><a th:href="@{'/banUser?id='+${user.getId()}+'&banned='+${user.isBlocked()}}"><button style="background-color: #da2f2f" class="btn btn-primary" th:if="${user.isBlocked()==true}">Разблокировать</button><button style="background-color: #da2f2f" class="btn btn-primary" th:if="${user.isBlocked()!=true}">Заблокировать</button></a></p>
         </div>
+
     </div>
 </div>
 </body>

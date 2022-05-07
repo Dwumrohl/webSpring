@@ -87,6 +87,9 @@ public class announcement {
       time.atZone(ZoneId.of("Etc/GMT+4"));
       return time.toString();
     }
+    public BsonTimestamp getRawDate(){
+        return date;
+    }
 
     public void setDate(BsonTimestamp date) {
         this.date = date;

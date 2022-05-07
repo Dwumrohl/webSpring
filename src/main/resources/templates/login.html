@@ -20,8 +20,8 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a href="/greeting" class="nav-link" style="color: black">Главная</a></li>
                 <li class="nav-item"><a href="/announcements" class="nav-link" style="color: black">Новости</a></li>
-                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Темы</a></li>
-                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Профиль</a></li>
+                <li class="nav-item"><a href="/themes" class="nav-link" style="color: black">Темы</a></li>
+                <li class="nav-item" th:if="${#session.getAttribute('logged')==true}"><a class="nav-link" th:href="@{'/profile?id='+${#session.getAttribute('userId')}}" style="color: black"><i class="far fa-user"></i><span th:text="${#session.getAttribute('username')}" style="margin-left: 5px;"></span></a></li>
                 <li class="nav-item active"><a href="#" class="nav-link" style="color: black">Вход</a></li>
             </ul>
         </div>
@@ -42,9 +42,13 @@
     <div class="tab-pane container active" id="menu1">
         <p/>
         <form action="#" th:action="@{/login}" th:object="${user}" method="post">
-            <p>Username: <input type="text" th:field="*{username}" /></p>
-            <p>Password: <input type="password" th:field="*{password}" /></p>
-            <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+            <div class="mb-3">
+            <p><input type="text" class="form-control"th:field="*{username}" placeholder="Username" required/></p>
+            </div>
+            <div class="mb-3">
+            <p><input type="password" class="form-control" th:field="*{password}" placeholder="Password" required/></p>
+            </div>
+            <p><input type="submit" value="Submit" class="btn btn-primary"/></p>
         </form>
         <span th:if="${msgFlag == true}" th:text="${msg}" style="color: red"></span>
         <span th:if="${regFlag == true}" th:text="${msgReg}" style="color: red"></span>
@@ -52,9 +56,13 @@
     <div class="tab-pane container fade" id="menu2">
         <p/>
         <form action="#" th:action="@{/reg}" th:object="${user}" method="post">
-        <p>Username: <input type="text" th:field="*{username}" /></p>
-        <p>Password: <input type="password" th:field="*{password}" /></p>
-        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+            <div class="mb-3">
+        <p><input type="text" class="form-control" th:field="*{username}" placeholder="Username" required/></p>
+            </div>
+            <div class="mb-3">
+        <p><input type="password" class="form-control" th:field="*{password}" placeholder="Password" required/></p>
+            </div>
+        <p><input type="submit" value="Submit" class="btn btn-primary"/></p>
     </form>
         <span th:if="${regFlag == true}" th:text="${msgReg}" style="color: red"></span>
     </div>

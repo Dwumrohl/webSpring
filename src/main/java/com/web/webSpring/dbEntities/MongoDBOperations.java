@@ -1,11 +1,16 @@
 package com.web.webSpring.dbEntities;
 
+import org.bson.BsonTimestamp;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MongoDBOperations {
@@ -14,7 +19,16 @@ public class MongoDBOperations {
     }
 
     public List<announcement> getAllAnnouncements(MongoOperations mongoOperations){
-        return mongoOperations.findAll(announcement.class);
+        Query searchAnn = new Query();
+        searchAnn.with(Sort.by(Sort.Direction.DESC, "date"));
+        return mongoOperations.find(searchAnn,announcement.class,"announcements");
+    }
+    public List<announcement> getAllAnnLimitFrom(MongoOperations mongoOperations, String value){
+        Query searchAnn = new Query();
+        searchAnn.with(Sort.by(Sort.Direction.DESC, "date"));
+        searchAnn.addCriteria(Criteria.where("date").lt(value));
+        searchAnn.limit(5);
+        return mongoOperations.find(searchAnn,announcement.class,"announcements");
     }
 
     public List<announcement> getAllAnnLimit(MongoOperations mongoOperations){
@@ -65,6 +79,7 @@ public class MongoDBOperations {
 
     public List<announcement> searchAnnS(MongoOperations mongoOperation, String criteria, String value) {
         Query searchAnn = new Query(Criteria.where(criteria).is(value));
+        searchAnn.with(Sort.by(Sort.Direction.DESC, "date"));
         return mongoOperation.find(searchAnn,announcement.class,"announcements");
     }
 
@@ -88,14 +103,28 @@ public class MongoDBOperations {
         return mongoOperation.find(searchComm,comment.class,"comments");
     }
 
-    public void updateUser(MongoOperations mongoOperation, String criteria, String value, String updateCriteria, String updateValue) {
+    public long countUserComments(MongoOperations mongoOperation, String criteria, String value){
+        Query query = new Query(Criteria.where(criteria).is(value));
+        return mongoOperation.count(query,"comments");
+    }
+
+    public void updateUser(MongoOperations mongoOperation, String criteria, String value, String updateCriteria, BsonTimestamp updateValue) {
         Query searchUser = new Query(Criteria.where(criteria).is(value));
         mongoOperation.updateMulti(searchUser, Update.update(updateCriteria, updateValue), user.class);
+    }
+
+    public void banUser(MongoOperations mongoOperation, String criteria, String value, String updateCriteria, boolean updateValue) {
+        Query searchUser = new Query(Criteria.where(criteria).is(value));
+        mongoOperation.updateFirst(searchUser, Update.update(updateCriteria, updateValue), user.class);
     }
 
     public void updateAnnouncement(MongoOperations mongoOperation, String criteria, String value, String updateCriteria, String updateValue) {
         Query searchAnn = new Query(Criteria.where(criteria).is(value));
         mongoOperation.updateFirst(searchAnn, Update.update(updateCriteria, updateValue), announcement.class);
+    }
+
+    public void saveAnnouncement(MongoOperations mongoOperation, announcement ann) {
+        mongoOperation.save(ann,"announcements");
     }
 
     public void updateComment(MongoOperations mongoOperation, String criteria, String value, String updateCriteria, String updateValue) {
@@ -116,6 +145,17 @@ public class MongoDBOperations {
     public void removeComment(MongoOperations mongoOperation, String criteria,String value) {
         Query searchComm = new Query(Criteria.where(criteria).is(value));
         mongoOperation.remove(searchComm, comment.class);
+    }
+
+    public List<announcement> searchForAnn(MongoOperations mongoOperation, String value){
+        Query query = new Query();
+        List<Criteria> criteria = new ArrayList<>();
+        criteria.add(Criteria.where("header").regex(".*"+value+".*","i"));
+        criteria.add(Criteria.where("description").regex(".*"+value+".*","i"));
+        criteria.add(Criteria.where("body").regex(".*"+value+".*","i"));
+        criteria.add(Criteria.where("type").regex(".*"+value+".*","i"));
+        query.addCriteria(new Criteria().orOperator(criteria.toArray(new Criteria[criteria.size()])));
+        return mongoOperation.find(query,announcement.class,"announcements");
     }
 }
 

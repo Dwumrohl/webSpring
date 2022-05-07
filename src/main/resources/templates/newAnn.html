@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/fontawesome.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
@@ -35,46 +33,45 @@
         </form>
     </div>
 </nav>
-<div class="container" style="background-color: rgba(0,255,136,0.1); border: 2px outset rgba(0,0,0,0.1); margin-top: 1%;">
+<div class="container" style="margin-top: 100px;">
     <div class="row">
-        <div class="col-md-12">
-            <i class="fas fa-newspaper" style="padding-left: 5%"></i><label th:text="${ann.getHeader()}" style="font-size: 18pt; text-decoration: underline; font-weight: bold; padding-top: 2%; padding-left: 5px"></label>
-            <label th:text="${ann.getDate()}" style="text-decoration: underline; padding-top: 2%; float: right; padding-right: 5%;"></label>
-            <hr/>
-            <label th:utext="${ann.getBody()}" style="padding: 5%"></label>
-        </div>
-    </div>
-</div>
-<div class="container" style="background-color: rgba(81,206,234,0.1); border: 2px outset rgba(0,0,0,0.1); margin-top: 1%;">
-    <div class="row">
-        <div class="col-md-12">
-            <label style="text-decoration: underline; font-weight: bold;font-size: 18pt; padding-top: 2%; padding-left: 5%"><i class="fas fa-comment"></i> Комментарии: <label th:text="${commSize}"></label></label>
-            <hr/>
-            <ul style="list-style: none; padding: unset;margin: unset; border-bottom: 1px solid black" th:each="comm : ${comments}">
-                <li>
-                    <i class="fas fa-user" style=" padding-left: 5%"></i><a style="color: black" th:href="@{'/profile?id='+${comm.getUserId()}}"><label th:text="${comm.getUserName()}" style="text-decoration: underline; font-weight: bold; padding-top: 2%;padding-left: 5px;"></label><i class="fas fa-external-link-alt" style="margin-left: 20px;"></i></a>
-                    <label th:if="${comm.isAdmin() == true}" style="text-decoration: underline; font-weight: bold;color: yellowgreen; padding-top: 2%; padding-left: 5%">Администратор</label>
-                    <label th:text="${comm.getDate()}" style="text-decoration: underline; padding-top: 2%; float: right; padding-right: 5%;"></label>
-                    <hr style="color: rgba(0,0,0,0.3)"/>
-                    <label th:utext="${comm.getBody()}" style="padding: 5%"></label>
-                    <p style="padding-left: 5%"><button class="btn btn-primary" style="background-color: #9f4f4f" th:if="${#session.getAttribute('username') == comm.getUserName() || #session.getAttribute('admin')==true}"><a style="color: white;" th:href="@{'/deleteComment?id='+${comm.getId()}}"><i class="fas fa-trash"></i> Удалить</a></button></p>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div th:if="${#session.getAttribute('logged')==true}" class="container"  style="background-color: rgba(63,210,243,0.1); border: 2px outset rgba(0,0,0,0.1); margin-top: 1%;">
-    <div class="row">
-        <div class="col-md-12">
-            <label style="text-decoration: underline; font-weight: bold;font-size: 18pt; padding-top: 2%; padding-left: 5%"><i class="fas fa-comment"></i> Оставить комментарий: </label>
-            <form action=# th:action="@{/leaveComment}" th:object="${comment}">
-                <div class="mb-3">
-                    <textarea wrap="hard" class="form-control" th:field="*{body}" style="height: 166px; resize: none" placeholder="Текст комментария..." required></textarea>
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="border: 1px solid #6c5858; background-color: rgba(23,71,166,0.1)">
+            <form th:action="@{/createAnn}" METHOD="post" action="#" th:object="${announcement}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div class="mb-3" style="padding: 10px">
+                        <label class="col-form-label" style="font-size: 20px; font-weight: bold">Добавление записи</label>
+                    </div>
+                <div class="mb-3" style="padding: 10px;">
+                    <label class="form-label" for="formHeader">Заголовок: </label><input id="formHeader" type="text" class="form-control" th:field="*{header}" required/>
                 </div>
-                <button type="submit" class="btn btn-primary">Отправить</button>
+                <div class="mb-3" style="padding: 10px;">
+                    <label class="form-label" for="formSelect">Тип: </label>
+                    <select id="formSelect" class="form-control" th:field="*{annTypeId}">
+                        <option th:each="type : ${types}" th:value="${type.getId()}" th:text="${type.getType()}"></option>
+                    </select>
+                </div>
+                <div class="mb-3" style="padding: 10px;">
+                    <label class="form-label" for="formDesc">Краткое описание: </label>
+                    <textarea id="formDesc" class="form-control" th:field="*{description}" wrap="hard" style="resize: none; height: 200px;" required></textarea>
+                </div>
+                <div class="mb-3" style="padding: 10px;">
+                    <label class="form-label" for="formBody">Содержание: </label>
+                    <textarea id="formBody" class="form-control" th:field="*{body}" wrap="hard" style="resize: none; height: 800px;" required></textarea>
+                </div>
+                    <div class="mb-3" style="padding: 10px;">
+                        <label class="form-label">Изображение: </label>
+                        <input type="file" class="form-control-file" name="file"/>
+                    </div>
+                <button type="submit" class="btn btn-primary" style="padding: 10px;">Добавить</button>
+                </div>
             </form>
         </div>
+        <div class="col-md-2"></div>
     </div>
+</div>
+<div class="container-fluid">
+    <div class="row" style="height: 100px"></div>
 </div>
 </body>
 </html>

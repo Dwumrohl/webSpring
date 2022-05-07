@@ -1,8 +1,12 @@
 package com.web.webSpring.dbEntities;
 
+import org.bson.BsonTimestamp;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.Instant;
+import java.time.ZoneId;
 
 @Document(collection = "users")
 public class user {
@@ -21,6 +25,12 @@ public class user {
 
     @Field("blocked")
     private boolean blocked;
+
+    @Field("register_date")
+    private BsonTimestamp register_date;
+
+    @Field("login_date")
+    private BsonTimestamp login_date;
 
     public user(){
 
@@ -41,11 +51,38 @@ public class user {
         this.blocked = blocked;
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "user[id=%s, username='%s', password='%s', admin='%s', blocked='%s' ]",
-                id, username, password, admin, blocked);
+    public user(String id, String username, String password, boolean admin, boolean blocked, BsonTimestamp register_date, BsonTimestamp login_date) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.admin = admin;
+        this.blocked = blocked;
+        this.register_date = register_date;
+        this.login_date = login_date;
+    }
+
+    public String getRegister_date() {
+        long value=register_date.getValue();
+        long unix = value >> 32;
+        Instant time = Instant.ofEpochSecond(unix);
+        time.atZone(ZoneId.of("Etc/GMT+4"));
+        return time.toString();
+    }
+
+    public void setRegister_date(BsonTimestamp register_date) {
+        this.register_date = register_date;
+    }
+
+    public String getLogin_date() {
+        long value=login_date.getValue();
+        long unix = value >> 32;
+        Instant time = Instant.ofEpochSecond(unix);
+        time.atZone(ZoneId.of("Etc/GMT+4"));
+        return time.toString();
+    }
+
+    public void setLogin_date(BsonTimestamp login_date) {
+        this.login_date = login_date;
     }
 
     public String getId() {

@@ -23,15 +23,20 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a href="/greeting" class="nav-link active" aria-current="page" style="color: black">Главная</a></li>
                 <li class="nav-item"><a href="/announcements" class="nav-link" style="color: black">Новости</a></li>
-                <li class="nav-item"><a href="#" class="nav-link" style="color: black">Темы</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" style="color: black">Профиль</a></li>
-                <li th:if="${logged!=true}" class="nav-item"><a class="nav-link" href="/login"  style="color: black">Вход</a></li>
-                <li th:if="${logged==true}" class="nav-item"><a class="nav-link" href="/logout"  style="color: black"><i class="far fa-user"></i> Выход</a></li>
+                <li class="nav-item"><a href="/themes" class="nav-link" style="color: black">Темы</a></li>
+                <li class="nav-item" th:if="${#session.getAttribute('logged')==true}"><a class="nav-link" th:href="@{'/profile?id='+${#session.getAttribute('userId')}}" style="color: black"><i class="far fa-user"></i><span th:text="${#session.getAttribute('username')}" style="margin-left: 5px;"></span></a></li>
+                <li th:if="${#session.getAttribute('logged')!=true}" class="nav-item"><a class="nav-link" href="/login"  style="color: black">Вход</a></li>
+                <li th:if="${#session.getAttribute('logged')==true}" class="nav-item"><a class="nav-link" href="/logout"  style="color: black">Выход</a></li>
             </ul>
         </div>
+        <form class="form-inline form-inline-long form-inline-margins" method="post" th:action="@{/searchAnn}">
+            <input name="searchInf" class="form-control" type="text" placeholder="Поиск" aria-label="Search">
+            <span class="form-control-feedback text-muted" style="margin-left: -25px;"><i class="fas fa-search"></i></span>
+        </form>
     </div>
 </nav>
-<ul style="list-style: none; margin-top: 50px;background-color: rgba(0,255,136,0.08);border-bottom: 2px outset rgba(17,66,47,0.1);border-top: 2px outset rgba(17,66,47,0.1);"th:each="ann : ${anns}">
+<p th:if="${#session.getAttribute('admin')==true}" style="margin-top: 50px; padding-left: 5%"><button class="btn btn-primary" style="font-size: 16px; background-color: #2df1d8"><a style="color: white;" th:href="@{'/newAnn'}"><span class="fas fa-plus"></span> Добавить запись</a></button></p>
+<ul style="list-style: none; margin-top: 10px;background-color: rgba(0,255,136,0.08);border-bottom: 2px outset rgba(17,66,47,0.1);border-top: 2px outset rgba(17,66,47,0.1);"th:each="ann : ${anns}">
     <li>
         <div class="container-fluid" style="padding-top: 2%">
             <div class="row">
@@ -46,7 +51,12 @@
                 </div>
         </div>
         </div>
-        <div class="container-fluid"><p style="padding-top: 30px;"><span class="far fa-clock"></span> Datetime: <span style="padding-top: 100px; font-size: 16px;" th:text="${ann.getDate()}"></span></p></div>
+        <div class="container-fluid">
+            <p style="padding-top: 30px;"><span class="far fa-clock"></span> Datetime: <span style="padding-top: 100px; font-size: 16px;" th:text="${ann.getDate()}"></span></p>
+            <p th:if="${#session.getAttribute('admin')==true}"><button class="btn btn-primary" style="font-size: 16px;"><a style="color: white;" th:href="@{'/deleteAnn?id='+${ann.getId()}}"><span class="fas fa-trash"></span> Удалить</a></button>
+                <button class="btn btn-primary" style="font-size: 16px;margin-left: 20px;"><a style="color: white" th:href="@{'/alterAnn?id='+${ann.getId()}}"><span class="far fa-list-alt"></span> Изменить</a></button></p>
+
+        </div>
     </li>
 </ul>
 

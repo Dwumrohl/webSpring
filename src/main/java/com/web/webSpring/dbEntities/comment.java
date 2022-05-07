@@ -46,7 +46,7 @@ public class comment {
         this.userName = userName;
     }
 
-    comment(){
+    public comment(){
     }
 
     public comment(String body, BsonTimestamp date, String annId, String userId) {
@@ -76,7 +76,7 @@ public class comment {
         long value=date.getValue();
         long unix = value >> 32;
         Instant time = Instant.ofEpochSecond(unix);
-        time.atZone(ZoneId.of("Etc/GMT+4"));
+        //time.atZone(ZoneId.of("Etc/GMT+4"));
         return time.toString();
     }
 
